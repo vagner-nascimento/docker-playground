@@ -1,0 +1,43 @@
+version: '3.1'
+
+services:
+  drupal:
+    container_name: drupal
+    image: drupal:latest
+    networks:
+      - drupal-net
+    ports:
+      - 8080:80
+    environment:
+      POSTGRES_PASSWORD: pass123
+    depends_on:
+      - postgres-drupal
+    links:
+      - postgres-drupal
+    volumes:
+      - drupal-modules:/var/www/html/modules
+      - drupal-sites:/var/www/html/sites
+      - drupal-profiles:/var/www/html/profiles
+      - drupal-themes:/var/www/html/themes
+
+  postgres-drupal:
+    container_name: postgres-drupal
+    image: postgres:latest
+    networks:
+      - drupal-net
+    ports:
+      - 5432:5432
+    environment:
+      POSTGRES_PASSWORD: pass123
+    volumes:
+      - drupal-data:/var/lib/postgresql/data
+
+networks:
+  drupal-net:
+
+volumes:
+  drupal-data:
+  drupal-modules:
+  drupal-sites:
+  drupal-profiles:
+  drupal-themes:
